@@ -2,7 +2,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
-import { IonPage, IonContent, IonItem, IonHeader, IonToolbar, IonTitle } from "@ionic/react";
+import { IonPage, IonContent, IonItem, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton } from "@ionic/react";
 
 export default function ProductPage() {
 
@@ -23,6 +23,13 @@ export default function ProductPage() {
         }
     };
 
+    const handleDelete = async(item:any)=>{
+        await axios.delete('/product/api/'+item?.Id).then((res)=>{
+            console.log("Delete Response", res.data);
+            getProducts();
+        })
+    };
+
     return (
         <IonPage>
             <IonHeader>
@@ -34,6 +41,10 @@ export default function ProductPage() {
                 {products.map((item: any, index: number) => (
                     <IonItem key={index}>
                         {item?.Name}
+                        <IonButtons slot = "end">
+                            {/* start ka left end ka right */}
+                            <IonButton color="danger" onClick={()=>handleDelete(item)}>Delete</IonButton>
+                        </IonButtons>
                     </IonItem>
                 ))}
             </IonContent>

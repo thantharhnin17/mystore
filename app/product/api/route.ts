@@ -12,3 +12,41 @@ export async function GET(req:any) {
         return NextResponse.json(error);
     }
 }
+
+
+export async function POST(req:NextResponse) {
+    const data = await req.formData();
+
+    const sql = `
+                INSERT INTO Products
+                (
+                    Name,
+                    BuyPrice,
+                    SellPrice
+                )
+                VALUES(?,?,?)
+                `;
+    
+    const values = [
+        data.get("name" || ""),
+        data.get("buyPrice" || ""),
+        data.get("sellPrice" || ""),
+    ];
+
+    try{
+        //Execute the SQL query
+        await query(sql, values);
+
+        return NextResponse.json({
+            status: "success",
+            message: "Successfully created",
+        });
+    }catch(error){
+        console.error("Errpr:", error);
+        return NextResponse.json({
+            status: "error",
+            message: "Error processing creation",
+            error,
+        });
+    }
+}
